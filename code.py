@@ -80,15 +80,16 @@ def main():
         x1, y1, x2, y2 = test_resx[idx], test_resy[idx], correct_x[idx], correct_y[idx]
         error_graphx.append(x2-x1)
         error_graphy.append(y2-y1)
-        error_hue = math.dist([x1,y1],[x2,y2])
-
-    print("error : ", np.average(error_hue)/max_joint * 100 , "%")
+        error_hue.append(math.dist([x1,y1],[x2,y2]))
+    
+    print("average error : ", np.average(error_hue)/math.sqrt(2*max_joint*max_joint) * 100 , "%")
     plt.figure()
+    plt.axhline(0, color='black')
+    plt.axvline(0, color='black')
+    plt.axis([-0.5, 0.5, -0.5, 0.5])
     # plt.figure(figsize=(10,6))
-    plt.scatter(error_graphx,error_graphy,s=0.1,label="error")
-    # plt.scatter(correct_x,correct_y,s=0.1,label="correct")
-    # plt.scatter(test_resx,test_resy,s=0.1,label="test_result")
-    plt.scatter(0,0,s=5,label="correct",c="red")
+    plt.scatter(error_graphx,error_graphy,s=0.1,label="error", alpha=1)
+    plt.scatter(0,0,s=10,label="correct",c="red")
     plt.legend()
     plt.show()
 
@@ -154,10 +155,9 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.fc1 = nn.Linear(3, 512)
-        self.fc2 = nn.Linear(512, 256)
-        self.fc3 = nn.Linear(256, 64)
+        self.fc2 = nn.Linear(512, 512)
+        self.fc3 = nn.Linear(512, 64)
         self.fc4 = nn.Linear(64, 2)
-        # self.fc5 = nn.Linear(128, 2)
         # self.fc6 = nn.Linear(200, 2)
 
 
@@ -166,8 +166,6 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
         x = self.fc4(x)
-        # x = F.tanh(self.fc5(x))
-        # x = F.sigmoid(self.fc6(x))
 
         return x
 
