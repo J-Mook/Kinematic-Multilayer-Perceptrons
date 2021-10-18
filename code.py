@@ -24,7 +24,6 @@ def main():
     dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
     model = Net()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    # optimizer = torch.optim.SGD(model.parameters(), lr=1e-3) 
     nb_epochs = 50
 
     criterion = nn.MSELoss()
@@ -33,7 +32,6 @@ def main():
 
     n=len(dataloader)
 
-    # for epoch in tqdm.tqdm(range(nb_epochs)):
     for epoch in range(nb_epochs):
         running_loss = 0
         for batch_idx, samples in enumerate(dataloader):
@@ -50,14 +48,11 @@ def main():
             optimizer.step()
 
             running_loss += loss.item()
-            # loss_graph.append(loss.item()) # 한 epoch에 모든 배치들에 대한 평균 loss 리스트에 담고,
         print('Epoch {:4d}/{} Batch {}/{} Cost: {:.6f}'.format(epoch, nb_epochs, batch_idx+1, len(dataloader),running_loss/n))
-        loss_graph.append(running_loss/n) # 한 epoch에 모든 배치들에 대한 평균 loss 리스트에 담고,
+        loss_graph.append(running_loss/n)
     
     plt.figure()
     plt.plot(np.linspace(0,1,len(loss_graph)), loss_graph)
-    # plt.show()
-
 
     test_resx = []
     test_resy = []
@@ -94,38 +89,19 @@ def main():
     plt.show()
 
     
-    # new_ang =  [1.5 / (2*math.pi), 1.5 / (2*math.pi)] # -0.459627647	0.569307497
-    # new_var =  torch.FloatTensor([new_ang]) # -0.459627647	0.569307497
-    
-    # start = time.time()
-    # pred_y = model(new_var) * max_joint
-    # print("예측값 :", pred_y) 
-    # print("경과 시간 :", start - time.time()) 
-
-    # start = time.time()
-    # recx = math.cos(new_ang[0]*(2*math.pi)) + math.cos(new_ang[0]*(2*math.pi) + new_ang[1]*(2*math.pi))
-    # recy = math.sin(new_ang[0]*(2*math.pi)) + math.sin(new_ang[0]*(2*math.pi) + new_ang[1]*(2*math.pi))
-    # print("예측값 :", [recx,]) 
-    # print("경과 시간 :", start - time.time()) 
-
-
-# Dataset 상속
 class CustomDataset(Dataset): 
     def __init__(self):
 
         df = pd.read_csv(r'machanism.csv', delimiter=',')
-        # print(df.shape)
         self.x_data = df.iloc[:, :-2].values
         self.y_data = df.iloc[:, -2:].values
         print(self.y_data)
         self.x_data = self.x_data / (2*math.pi)
         self.y_data = self.y_data / max_joint
 
-    # 총 데이터의 개수를 리턴
     def __len__(self): 
         return len(self.x_data)
 
-    # 인덱스를 입력받아 그에 맵핑되는 입출력 데이터를 파이토치의 Tensor 형태로 리턴
     def __getitem__(self, idx): 
         x = torch.FloatTensor(self.x_data[idx])
         y = torch.FloatTensor(self.y_data[idx])
@@ -135,17 +111,14 @@ class Customtestset(Dataset):
     def __init__(self):
 
         df = pd.read_csv(r'machanism_test.csv', delimiter=',')
-        # print(df.shape)
         self.x_data = df.iloc[:, :-2].values
         self.y_data = df.iloc[:, -2:].values
         self.x_data = self.x_data / (2*math.pi)
         self.y_data = self.y_data / max_joint
 
-    # 총 데이터의 개수를 리턴
     def __len__(self): 
         return len(self.x_data)
 
-    # 인덱스를 입력받아 그에 맵핑되는 입출력 데이터를 파이토치의 Tensor 형태로 리턴
     def __getitem__(self, idx): 
         x = torch.FloatTensor(self.x_data[idx])
         y = torch.FloatTensor(self.y_data[idx])
@@ -158,8 +131,6 @@ class Net(nn.Module):
         self.fc2 = nn.Linear(512, 512)
         self.fc3 = nn.Linear(512, 64)
         self.fc4 = nn.Linear(64, 2)
-        # self.fc6 = nn.Linear(200, 2)
-
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
@@ -168,6 +139,5 @@ class Net(nn.Module):
         x = self.fc4(x)
 
         return x
-
 
 main()
