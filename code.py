@@ -52,7 +52,7 @@ def main():
         loss_graph.append(running_loss/n)
     
     plt.figure()
-    plt.plot(np.linspace(0,len(loss_graph)), loss_graph)
+    plt.plot(np.arange(len(loss_graph)), loss_graph)
     plt.xlabel('epochs')
     plt.ylabel('loss ratio')
 
