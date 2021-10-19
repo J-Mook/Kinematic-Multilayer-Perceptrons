@@ -21,10 +21,10 @@ def main():
     # print(dataset.x_data)
     # print(dataset.y_data)
 
-    dataloader = DataLoader(dataset, batch_size=5000, shuffle=True)
+    dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
     model = Net()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    nb_epochs = 100
+    nb_epochs = 50
 
     criterion = nn.MSELoss()
 
@@ -85,7 +85,7 @@ def main():
     plt.scatter(0,0,s=10,label="correct",c="red")
     plt.axhline(0, color='black')
     plt.axvline(0, color='black')
-    # plt.axis([-0.5, 0.5, -0.5, 0.5])
+    plt.axis([-0.5, 0.5, -0.5, 0.5])
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
     # plt.figure(figsize=(10,6))
