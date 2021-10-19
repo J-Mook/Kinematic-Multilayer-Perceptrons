@@ -52,7 +52,9 @@ def main():
         loss_graph.append(running_loss/n)
     
     plt.figure()
-    plt.plot(np.linspace(0,1,len(loss_graph)), loss_graph)
+    plt.plot(np.linspace(0,len(loss_graph)), loss_graph)
+    plt.xlabel('epochs')
+    plt.ylabel('loss ratio')
 
     test_resx = []
     test_resy = []
@@ -82,6 +84,8 @@ def main():
     plt.axhline(0, color='black')
     plt.axvline(0, color='black')
     plt.axis([-0.5, 0.5, -0.5, 0.5])
+    plt.xlabel('x (m)')
+    plt.ylabel('y (m)')
     # plt.figure(figsize=(10,6))
     plt.scatter(error_graphx,error_graphy,s=0.1,label="error", alpha=1)
     plt.scatter(0,0,s=10,label="correct",c="red")
