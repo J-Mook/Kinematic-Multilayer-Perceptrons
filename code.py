@@ -21,10 +21,10 @@ def main():
     # print(dataset.x_data)
     # print(dataset.y_data)
 
-    dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
+    dataloader = DataLoader(dataset, batch_size=5000, shuffle=True)
     model = Net()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    nb_epochs = 50
+    nb_epochs = 100
 
     criterion = nn.MSELoss()
 
@@ -52,6 +52,7 @@ def main():
         loss_graph.append(running_loss/n)
     
     plt.figure()
+    print(loss_graph)
     plt.plot(np.arange(len(loss_graph)), loss_graph)
     plt.xlabel('epochs')
     plt.ylabel('loss ratio')
@@ -60,15 +61,15 @@ def main():
     test_resy = []
     for data in testset.x_data:
         res = torch.detach(model(torch.FloatTensor(data))).numpy()
-        test_resx.append(res[0] * max_joint)
-        test_resy.append(res[1] * max_joint)
+        test_resx.append(res[0])
+        test_resy.append(res[1])
 
     correct_x = []
     correct_y = []
     for data in testset.y_data:
         # H(x) 계산
-        correct_x.append(data[0] * max_joint)
-        correct_y.append(data[1] * max_joint)
+        correct_x.append(data[0])
+        correct_y.append(data[1])
 
     error_graphx = []
     error_graphy = []
@@ -81,14 +82,14 @@ def main():
     
     print("average error : ", np.average(error_hue)/math.sqrt(2*max_joint*max_joint) * 100 , "%")
     plt.figure()
+    plt.scatter(0,0,s=10,label="correct",c="red")
     plt.axhline(0, color='black')
     plt.axvline(0, color='black')
-    plt.axis([-0.5, 0.5, -0.5, 0.5])
+    # plt.axis([-0.5, 0.5, -0.5, 0.5])
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
     # plt.figure(figsize=(10,6))
     plt.scatter(error_graphx,error_graphy,s=0.1,label="error", alpha=1)
-    plt.scatter(0,0,s=10,label="correct",c="red")
     plt.legend()
     plt.show()
 
@@ -99,9 +100,8 @@ class CustomDataset(Dataset):
         df = pd.read_csv(r'machanism.csv', delimiter=',')
         self.x_data = df.iloc[:, :-2].values
         self.y_data = df.iloc[:, -2:].values
-        print(self.y_data)
-        self.x_data = self.x_data / (2*math.pi)
-        self.y_data = self.y_data / max_joint
+        self.x_data = self.x_data
+        self.y_data = self.y_data
 
     def __len__(self): 
         return len(self.x_data)
@@ -117,8 +117,8 @@ class Customtestset(Dataset):
         df = pd.read_csv(r'machanism_test.csv', delimiter=',')
         self.x_data = df.iloc[:, :-2].values
         self.y_data = df.iloc[:, -2:].values
-        self.x_data = self.x_data / (2*math.pi)
-        self.y_data = self.y_data / max_joint
+        self.x_data = self.x_data
+        self.y_data = self.y_data
 
     def __len__(self): 
         return len(self.x_data)
@@ -134,13 +134,13 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(3, 512)
         self.fc2 = nn.Linear(512, 512)
         self.fc3 = nn.Linear(512, 64)
-        self.fc4 = nn.Linear(64, 2)
+        self.fcf = nn.Linear(64, 2)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        x = self.fc4(x)
+        x = self.fcf(x)
 
         return x
 
