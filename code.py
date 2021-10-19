@@ -18,9 +18,6 @@ def main():
     dataset = CustomDataset()
     testset = Customtestset()
 
-    # print(dataset.x_data)
-    # print(dataset.y_data)
-
     dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
     model = Net()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
@@ -52,7 +49,6 @@ def main():
         loss_graph.append(running_loss/n)
     
     plt.figure()
-    print(loss_graph)
     plt.plot(np.arange(len(loss_graph)), loss_graph)
     plt.xlabel('epochs')
     plt.ylabel('loss ratio')
