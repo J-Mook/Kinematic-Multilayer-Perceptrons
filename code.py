@@ -24,7 +24,7 @@ def main():
     dataloader = DataLoader(dataset, batch_size=100, shuffle=True)
     model = Net()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    nb_epochs = 50
+    nb_epochs = 30
 
     criterion = nn.MSELoss()
 
@@ -90,9 +90,9 @@ def main():
         error_hue.append(math.dist([x1, y1, z1], [x2, y2, z2]))
     print("average error : ", np.average(error_hue)/math.sqrt(3*max_joint*max_joint) * 100 , "%")
     print(np.average(error_hue))
-    print(np.average(error_graphx))
-    print(np.average(error_graphy))
-    print(np.average(error_graphz))
+    print(np.average(np.abs(error_graphx)))
+    print(np.average(np.abs(error_graphy)))
+    print(np.average(np.abs(error_graphz)))
     # plt.figure()
     # plt.axhline(0, color='black')
     # plt.axvline(0, color='black')
