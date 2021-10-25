@@ -6,9 +6,7 @@ from torch.utils.data import DataLoader
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import tqdm
 import math
-import time
 
 from mpl_toolkits.mplot3d import Axes3D
 
