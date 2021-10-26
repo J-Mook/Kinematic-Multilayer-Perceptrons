@@ -1,0 +1,11 @@
+#불필요한 파일들
+.vscode/settings.json
+*.pyc
+.DS_Store
+__pycache__
+
+#논문 원본
+IEIE_paper/Kinematic Analysis Using Multilayer Perceptrons for 6-DOF Manipulator Control System.docx
+IEIE_paper/프레젠테이션1.pptx
+IEIE_paper/서면 심사용 논문 양식.docx
+IEIE_paper/Kinematic Analysis Using Multilayer Perceptrons for 3-DOF Manipulator Control System_ENG.docx
