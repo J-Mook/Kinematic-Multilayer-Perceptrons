@@ -11,7 +11,7 @@ import math
 from mpl_toolkits.mplot3d import Axes3D
 
 max_joint = 1
-train_cut=12000
+train_cut=8000
 
 def main():
     
@@ -116,8 +116,8 @@ def main():
 class CustomDataset(Dataset): 
     def __init__(self):
 
-        # df = pd.read_csv(r'machanism.csv', delimiter=',')
-        df = pd.read_csv(r'robot_inverse_kinematics_dataset.csv', delimiter=',')
+        df = pd.read_csv(r'machanism.csv', delimiter=',')
+        # df = pd.read_csv(r'robot_inverse_kinematics_dataset.csv', delimiter=',')
         self.x_data = df.iloc[:train_cut, :-3].values
         self.y_data = df.iloc[:train_cut, -3:].values
         self.x_data = self.x_data
@@ -134,8 +134,9 @@ class CustomDataset(Dataset):
 class Customtestset(Dataset): 
     def __init__(self):
 
-        # df = pd.read_csv(r'machanism_test.csv', delimiter=',')
-        df = pd.read_csv(r'robot_inverse_kinematics_dataset.csv', delimiter=',')
+        df = pd.read_csv(r'machanism_test.csv', delimiter=',')
+        print(df.describe())
+        # df = pd.read_csv(r'robot_inverse_kinematics_dataset.csv', delimiter=',')
         self.x_data = df.iloc[train_cut:, :-3].values
         self.y_data = df.iloc[train_cut:, -3:].values
         self.x_data = self.x_data
@@ -152,8 +153,8 @@ class Customtestset(Dataset):
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(6, 512)
-        self.fc2 = nn.Linear(512, 512)
+        self.fc1 = nn.Linear(2, 100)
+        self.fc2 = nn.Linear(100, 512)
         self.fc3 = nn.Linear(512, 64)
         self.fcf = nn.Linear(64, 3)
 
