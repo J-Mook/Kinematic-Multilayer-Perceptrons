@@ -11,7 +11,7 @@ import math
 from mpl_toolkits.mplot3d import Axes3D
 
 max_joint = 1
-train_cut=8000
+train_cut=9000
 
 def main():
     
@@ -19,10 +19,10 @@ def main():
     dataset = CustomDataset()
     testset = Customtestset()
 
-    dataloader = DataLoader(dataset, batch_size=100, shuffle=True)
+    dataloader = DataLoader(dataset, batch_size=300, shuffle=True)
     model = Net()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    nb_epochs = 30
+    nb_epochs = 20
 
     criterion = nn.MSELoss()
 
@@ -82,9 +82,12 @@ def main():
         # error_graphx.append(x2-x1)
         # error_graphy.append(y2-y1)
         x1, y1, z1, x2, y2, z2 = test_res[idx][0], test_res[idx][1], test_res[idx][2], correct[idx][0], correct[idx][1], correct[idx][2]
-        error_graphx.append((x2-x1)*1000)
-        error_graphy.append((y2-y1)*1000)
-        error_graphz.append((z2-z1)*1000)
+        error_graphx.append(x2-x1)
+        error_graphy.append(y2-y1)
+        error_graphz.append(z2-z1)
+        # error_graphx.append((x2-x1)*1000)
+        # error_graphy.append((y2-y1)*1000)
+        # error_graphz.append((z2-z1)*1000)
         error_hue.append(math.dist([x1, y1, z1], [x2, y2, z2]))
     print("average error : ", np.average(error_hue)/math.sqrt(3*max_joint*max_joint) * 100 , "%")
     print(np.average(error_hue))
@@ -134,9 +137,8 @@ class CustomDataset(Dataset):
 class Customtestset(Dataset): 
     def __init__(self):
 
-        df = pd.read_csv(r'machanism_test.csv', delimiter=',')
-        print(df.describe())
-        # df = pd.read_csv(r'robot_inverse_kinematics_dataset.csv', delimiter=',')
+        # df = pd.read_csv(r'machanism_test.csv', delimiter=',')
+        df = pd.read_csv(r'robot_inverse_kinematics_dataset.csv', delimiter=',')
         self.x_data = df.iloc[train_cut:, :-3].values
         self.y_data = df.iloc[train_cut:, -3:].values
         self.x_data = self.x_data
@@ -153,8 +155,8 @@ class Customtestset(Dataset):
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(2, 100)
-        self.fc2 = nn.Linear(100, 512)
+        self.fc1 = nn.Linear(6, 512)
+        self.fc2 = nn.Linear(512, 512)
         self.fc3 = nn.Linear(512, 64)
         self.fcf = nn.Linear(64, 3)
 
@@ -163,7 +165,26 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
         x = self.fcf(x)
-
         return x
+
+    # def __init__(self):
+    #     super(Net, self).__init__()
+    #     self.fc1 = nn.Linear(4, 16)
+    #     self.fc2 = nn.Linear(16, 128)
+    #     self.fc3 = nn.Linear(128, 512)
+    #     self.fc4 = nn.Linear(512, 1024)
+    #     self.fc5 = nn.Linear(1024, 256)
+    #     self.fc6 = nn.Linear(256, 64)
+    #     self.fcf = nn.Linear(64, 3)
+
+    # def forward(self, x):
+    #     x = F.relu(self.fc1(x))
+    #     x = F.relu(self.fc2(x))
+    #     x = F.relu(self.fc3(x))
+    #     x = F.relu(self.fc4(x))
+    #     x = F.relu(self.fc5(x))
+    #     x = F.relu(self.fc6(x))
+    #     x = self.fcf(x)
+    #     return x
 
 main()
